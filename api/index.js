@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("./models/User");
-const CookieParser = require('cookie-parser')
+const CookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
 
@@ -56,7 +56,7 @@ app.post("/login", async (req, res) => {
     const passOk = bcrypt.compareSync(password, userDoc.password);
     if (passOk) {
       jwt.sign(
-        { email: userDoc.email, id: userDoc._id},
+        { email: userDoc.email, id: userDoc._id },
         jwtSecret,
         {},
         (error, token) => {
@@ -72,18 +72,24 @@ app.post("/login", async (req, res) => {
   }
 });
 
+//*****  LOGOUT  *****//
+
+app.post("/logout", async (req, res) => {
+  res.cookie('token', "").json(true);
+});
+
 //*****  PROFILE  *****//
 
 app.get("/profile", (req, res) => {
-  const {token} = req.cookies;
+  const { token } = req.cookies;
   if (token) {
-    jwt.verify(token, jwtSecret, {}, async (error, userData)=>{
+    jwt.verify(token, jwtSecret, {}, async (error, userData) => {
       if (error) throw error;
-      const {name, email, _id} = await User.findById(userData.id)
-      res.json({name, email, _id});
-    })
+      const { name, email, _id } = await User.findById(userData.id);
+      res.json({ name, email, _id });
+    });
   } else {
-    res.json(null)
+    res.json(null);
   }
 });
 
