@@ -93,5 +93,9 @@ app.get("/profile", (req, res) => {
   }
 });
 
+app.post('/upload-by-link', (req, res) => {
+  const {link} = req.body;
+})
+
 app.listen(4000);
 console.log("Servidor corriendo http://localhost:4000");
