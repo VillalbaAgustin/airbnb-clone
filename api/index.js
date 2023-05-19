@@ -6,6 +6,9 @@ const jwt = require("jsonwebtoken");
 const User = require("./models/User");
 const CookieParser = require("cookie-parser");
 const imageDownloader = require("image-downloader");
+const multer = require("multer");
+const fs = require('fs');
+
 require("dotenv").config();
 const app = express();
 
@@ -105,6 +108,22 @@ app.post('/upload-by-link', async (req, res) => {
     dest: __dirname + '/uploads/' + newName,
   })
   res.json(newName);
+})
+
+//*****  UPLOAD   *****//
+
+const photoMiddleware = multer({dest: 'uploads'})
+app.post('/upload', photoMiddleware.array('photos', 100), (req, res) => {
+  const uploadedFiles = [];
+  for (let i = 0; i < req.files.length; i++) {
+    const {path, originalname} = req.files[i];
+    const parts = originalname.split('.')
+    const extension = parts[ parts.length - 1 ]
+    const newPath = path + '.' + extension;
+    fs.renameSync(path, newPath);
+    uploadedFiles.push(newPath.replace('uploads\\',''));
+  }
+  res.json(uploadedFiles)
 })
 
 app.listen(4000);
