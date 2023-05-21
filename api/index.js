@@ -4,10 +4,11 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("./models/User");
+const Place = require("./models/Place");
 const CookieParser = require("cookie-parser");
 const imageDownloader = require("image-downloader");
 const multer = require("multer");
-const fs = require('fs');
+const fs = require("fs");
 
 require("dotenv").config();
 const app = express();
@@ -17,7 +18,7 @@ const jwtSecret = "fasefrlhkl4gkk3b45g4kjgv";
 
 app.use(express.json());
 app.use(CookieParser());
-app.use('/uploads',express.static(__dirname+'/uploads'))
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 // CORS
 app.use(
@@ -80,7 +81,7 @@ app.post("/login", async (req, res) => {
 //*****  LOGOUT  *****//
 
 app.post("/logout", async (req, res) => {
-  res.cookie('token', "").json(true);
+  res.cookie("token", "").json(true);
 });
 
 //*****  PROFILE  *****//
@@ -100,31 +101,66 @@ app.get("/profile", (req, res) => {
 
 //*****  UPLOAD PHOTO BY LINK  *****//
 
-app.post('/upload-by-link', async (req, res) => {
-  const {link} = req.body;
-  const newName = 'photo' + Date.now() + '.jpg';
+app.post("/upload-by-link", async (req, res) => {
+  const { link } = req.body;
+  const newName = "photo" + Date.now() + ".jpg";
   await imageDownloader.image({
     url: link,
-    dest: __dirname + '/uploads/' + newName,
-  })
+    dest: __dirname + "/uploads/" + newName,
+  });
   res.json(newName);
-})
+});
 
 //*****  UPLOAD   *****//
 
-const photoMiddleware = multer({dest: 'uploads'})
-app.post('/upload', photoMiddleware.array('photos', 100), (req, res) => {
+const photoMiddleware = multer({ dest: "uploads" });
+app.post("/upload", photoMiddleware.array("photos", 100), (req, res) => {
   const uploadedFiles = [];
   for (let i = 0; i < req.files.length; i++) {
-    const {path, originalname} = req.files[i];
-    const parts = originalname.split('.')
-    const extension = parts[ parts.length - 1 ]
-    const newPath = path + '.' + extension;
+    const { path, originalname } = req.files[i];
+    const parts = originalname.split(".");
+    const extension = parts[parts.length - 1];
+    const newPath = path + "." + extension;
     fs.renameSync(path, newPath);
-    uploadedFiles.push(newPath.replace('uploads\\',''));
+    uploadedFiles.push(newPath.replace("uploads\\", ""));
   }
-  res.json(uploadedFiles)
-})
+  res.json(uploadedFiles);
+});
+
+//*****  PLACES   *****//
+
+app.post("/places", (req, res) => {
+  const { token } = req.cookies;
+  const {
+    title,
+    address,
+    addedPhotos,
+    description,
+    perks,
+    extraInfo,
+    checkIn,
+    checkOut,
+    maxGuests,
+  } = req.body;
+
+  jwt.verify(token, jwtSecret, {}, async (error, userData) => {
+    if (error) throw error;
+
+    const placeDoc = await Place.create({
+      owner: userData.id,
+      title,
+      address,
+      addedPhotos,
+      description,
+      perks,
+      extraInfo,
+      checkIn,
+      checkOut,
+      maxGuests,
+    });
+    res.json(placeDoc);
+  });
+});
 
 app.listen(4000);
 console.log("Servidor corriendo http://localhost:4000");
