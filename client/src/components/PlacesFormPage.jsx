@@ -57,35 +57,27 @@ export const PlacesFormPage = () => {
 
   const savePlace = async (e) => {
     e.preventDefault();
+    const placeData = {
+      title,
+      address,
+      addedPhotos,
+      description,
+      perks,
+      extraInfo,
+      checkIn,
+      checkOut,
+      maxGuests
+    };
 
     if (id) {
       //update
       await axios.put("/places", {
-        id,
-        title,
-        address,
-        addedPhotos,
-        description,
-        perks,
-        extraInfo,
-        checkIn,
-        checkOut,
-        maxGuests
+        id, ...placeData
       });
       setRedirect(true);
     } else{
       //new place
-      await axios.post("/places", {
-        title,
-        address,
-        addedPhotos,
-        description,
-        perks,
-        extraInfo,
-        checkIn,
-        checkOut,
-        maxGuests
-      });
+      await axios.post("/places", placeData);
       setRedirect(true);
     }
   };
