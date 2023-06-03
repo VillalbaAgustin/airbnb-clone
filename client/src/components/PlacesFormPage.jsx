@@ -88,85 +88,31 @@ export const PlacesFormPage = () => {
     <div>
       <AccountNav/>
       <form onSubmit={savePlace}>
-        {preInput(
-          "Title",
-          "Title for your place. Should be short and catchy as inadvertisement"
-        )}
-        <input
-          type="text"
-          placeholder="title, for example: My lovely apt"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
-        />
+        {preInput("Title","Title for your place. Should be short and catchy as inadvertisement")}
+        <input type="text" placeholder="title, for example: My lovely apt" value={title} onChange={(e) => {setTitle(e.target.value)}}/>
         {preInput("Addres", "Addres to this place")}
-        <input
-          type="text"
-          placeholder="addres"
-          value={address}
-          onChange={(e) => {
-            setAddress(e.target.value);
-          }}
-        />
+        <input type="text" placeholder="addres" value={address} onChange={(e) => {setAddress(e.target.value)}}/>
         {preInput("Photo", "more = better")}
         <PhotoUploader addedPhotos={addedPhotos} onChange={setAddedPhotos} />
         {preInput("Description", "Description of the place")}
-        <textarea
-          cols="30"
-          rows="6"
-          value={description}
-          onChange={(e) => {
-            setDescription(e.target.value);
-          }}
-        />
+        <textarea cols="30" rows="6" value={description} onChange={(e) => {setDescription(e.target.value)}}/>
         {preInput("Perks", "Select all the perks of your place")}
         <PerksLabels selected={perks} onChange={setPerks} />
         {preInput("Extra info", "House rules, etc")}
-        <textarea
-          cols="30"
-          rows="6"
-          value={extraInfo}
-          onChange={(e) => {
-            setExtraInfo(e.target.value);
-          }}
-        />
-        {preInput(
-          "Check in&out times",
-          "Add check in and out times, remember to have some time window for cleaning the room between guests"
-        )}
+        <textarea cols="30" rows="6" value={extraInfo} onChange={(e) => {setExtraInfo(e.target.value)}}/>
+        {preInput( "Check in&out times", "Add check in and out times, remember to have some time window for cleaning the room between guests" )}
         <div className="grid gap-2 sm:grid-cols-3">
           <div>
             <h3 className="mt-2 -mb-1">Check in time</h3>
-            <input
-              type="text"
-              placeholder="14:00"
-              value={checkIn}
-              onChange={(e) => {
-                setCheckIn(e.target.value);
-              }}
-            />
+            <input type="text" placeholder="14:00" value={checkIn} onChange={(e) => {setCheckIn(e.target.value)}} />
           </div>
           <div>
             <h3 className="mt-2 -mb-1">Check out time</h3>
-            <input
-              type="text"
-              placeholder="10:00"
-              value={checkOut}
-              onChange={(e) => {
-                setCheckOut(e.target.value);
-              }}
-            />
+            <input type="text" placeholder="10:00" value={checkOut} onChange={(e) => {setCheckOut(e.target.value)}}/>
           </div>
           <div>
             <h3 className="mt-2 -mb-1">Max number of guests</h3>
-            <input
-              type="number"
-              value={maxGuests}
-              onChange={(e) => {
-                setMaxGuests(e.target.value);
-              }}
-            />
+            <input type="number" value={maxGuests} onChange={(e) => {setMaxGuests(e.target.value)}}/>
           </div>
         </div>
         <button className="primary my-4">Save</button>
