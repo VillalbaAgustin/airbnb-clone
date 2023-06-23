@@ -1,6 +1,6 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import { IndexPage, LoginPage, RegisterPage, ProfilePage, PlacesPage, PlacePage} from "./pages";
+import { IndexPage, LoginPage, RegisterPage, ProfilePage, PlacesPage, PlacePage, BookingsPage, BookingPage} from "./pages";
 import { Layout } from "./layout/Layout";
 import axios from "axios";
 import { UserContextProvider } from "./UserContext";
@@ -23,6 +23,8 @@ export const App = () => {
           <Route path="/account/places/new" element={<PlacesFormPage />} />
           <Route path="/account/places/:id" element={<PlacesFormPage />} />
           <Route path="/place/:id" element={<PlacePage/>}/>
+          <Route path="/account/bookings" element={<BookingsPage/>}/>
+          <Route path="/account/bookings/:id" element={<BookingPage/>}/>
         </Route>
       </Routes>
     </UserContextProvider>

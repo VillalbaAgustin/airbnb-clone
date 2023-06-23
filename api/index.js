@@ -32,6 +32,17 @@ app.use(
 
 mongoose.connect(process.env.MONGO_URL);
 
+//*****  FUNCTIONS  *****//
+
+const getUserDataFromReq = (req) => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(req.cookies.token, jwtSecret, {}, async (error, userData) => {
+      if (error) throw error;
+      resolve (userData)
+    });
+  })
+};
+
 //*****  TEST  *****//
 
 app.get("/test", (req, res) => {
@@ -177,16 +188,26 @@ app.get('/places', async (req, res) => {
   res.json( await Place.find() );
 })
 
-app.post('/bookings', (req, res) => {
+//*****  BOOKINGS   *****//
+
+app.post('/bookings', async (req, res) => {
+
+  const userData = await getUserDataFromReq(req);
+
   const {place, checkIn, checkOut, numberOfGuests, name, phone, price} = req.body;
   Booking.create({
-    place, checkIn, checkOut, numberOfGuests, name, phone, price
+    place, checkIn, checkOut, numberOfGuests, name, phone, price, user: userData._id
   }).then((doc)=>{
     res.json(doc);
   }).catch((err)=>{
     if (err) throw err;
   } )
-})
+});
+
+app.get('/bookings', async (req, res) => {
+  const userData = await getUserDataFromReq(req);
+  res.json( await Booking.find({user: userData._id}).populate('place'))
+});
 
 app.listen(4000);
 console.log("Servidor corriendo http://localhost:4000");
