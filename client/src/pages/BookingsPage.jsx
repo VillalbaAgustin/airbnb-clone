@@ -19,7 +19,7 @@ export const BookingsPage = () => {
       <AccountNav />
       {bookings?.length > 0 &&
         bookings.map((booking) => (
-          <Link to={`/account/booking/${booking._id}`}
+          <Link to={`/account/bookings/${booking._id}`}
             key={booking.place._id}
             className="flex gap-3 mb-3 bg-gray-200 rounded-2xl  overflow-hidden"
           >
@@ -27,9 +27,7 @@ export const BookingsPage = () => {
               <PlaceImg place={booking.place} />
             </div>
             <div className="py-3 pr-3 grow">
-              
               <h2 className="text-xl ">{booking.place.title}</h2>
-              
               <div className="text-xl">
                 <BookingDates booking={booking} className='mb-2 mt-4 text-gray-700'/>
 
